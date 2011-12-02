@@ -1,6 +1,6 @@
 package lsystem {
 import flash.display.Shape;
-import flash.errors.EOFError;
+import flash.display.Sprite;
 import flash.events.Event;
 import flash.geom.Point;
 
@@ -15,14 +15,16 @@ public class LSystem extends Shape {
   private var _angle:Number;
   private var _order:Number;
   private var _fProductions:Array;
+  private var _distance:Number;
 
   private var finalPath:Array = [];
 
-  public function LSystem(start:String, rules:Array, angle:Number, order:Number) {
+  public function LSystem(start:String, rules:Array, angle:Number, order:Number, distance:Number) {
     _start = start;
     _rules = rules;
     _angle = angle;
     _order = order;
+    _distance = distance;
     _fProductions = new Array();
 
     for each (var r:Rule in rules) {
@@ -31,7 +33,7 @@ public class LSystem extends Shape {
       }
     }
 
-    produceString(this._start, _order);
+    produceString(_start, _order);
     finalPath.position = 0;
   }
 
@@ -47,52 +49,47 @@ public class LSystem extends Shape {
     return _angle;
   }
 
-  public function draw(x:Number, y:Number, startAngle:Number, lineThickness:Number, distance:Number, iterationSteps:Number = -1):void {
-    turtle = new Turtle(new Point(x, y), degToRad(startAngle), 0x659D32, lineThickness, this.graphics);
-    var func:Function = function(event:Event):void {
-      if (!iteratePath(distance, iterationSteps)) {
-        removeEventListener(Event.ENTER_FRAME, func);
-      }
-    };
-    addEventListener(Event.ENTER_FRAME, func);
+  public function draw(x:Number, y:Number, startAngle:Number, lineThickness:Number, iterationSteps:Number = -1):void {
+    turtle = new Turtle(new Point(x, y), degToRad(startAngle), 0x659D32, lineThickness, graphics);
+
+    addEventListener(Event.ENTER_FRAME, handleFrameEvent);
   }
 
-  private function iteratePath(distance:uint, iterationSteps:Number = -1):Boolean {
-    if (iterationSteps <= 0) {
-      iterationSteps = finalPath.length - 1;
-      if (iterationSteps == 0) {
-        return false;
+  private function handleFrameEvent(event:Event):void {
+    trace("handle frame event");
+    if (!iteratePath()) {
+      trace("stop drawing");
+      removeEventListener(Event.ENTER_FRAME, handleFrameEvent);
+    }
+  }
+
+  private function iteratePath():Boolean {
+    for (var i:uint = 0; i < finalPath.length; i++) {
+      var step:int = finalPath[i];
+
+      switch (step) {
+        case 1:
+          turtle.turn(degToRad(angle));
+          break;
+        case 2:
+          turtle.turn(-degToRad(angle));
+          break;
+        case 3:
+          turtle.turn(degToRad(180.0));
+          break;
+        case 4:
+          turtle.forward(_distance, true);
+          break;
+        case 5:
+          turtle.saveTurtle();
+          break;
+        case 6:
+          turtle.restoreTurtle();
+          break;
+
       }
     }
-    for (var i:uint = 0; i < iterationSteps; i++) {
-      if (finalPath.length >= 0) {
-
-        var step:int = finalPath[i];
-
-        switch (step) {
-          case 1:
-            turtle.turn(degToRad(angle));
-            break;
-          case 2:
-            turtle.turn(-degToRad(angle));
-            break;
-          case 3:
-            turtle.turn(degToRad(180));
-            break;
-          case 4:
-            turtle.forward(distance, true);
-            break;
-          case 5:
-            turtle.saveTurtle();
-            break;
-          case 6:
-            turtle.restoreTurtle();
-            break;
-
-        }
-      }
-    }
-    return true;
+    return false;
   }
 
   private function produceString(production:String, order:uint):void {
@@ -109,7 +106,7 @@ public class LSystem extends Shape {
           break;
         case 'F':
           if (order > 0) {
-            var randomNo:uint = Math.random() * (_fProductions.length);
+            var randomNo:uint = uint(Math.random() * (_fProductions.length));
             var fStr:String = _fProductions[randomNo];
             if (fStr) {
               produceString(fStr, order - 1);
@@ -127,9 +124,10 @@ public class LSystem extends Shape {
           break;
         default:
           if (order > 0) {
-            for each (var r:Rule in _rules) {
-              if (r.variable == production.charAt(i)) {
-                produceString(r.expression, order - 1);
+            for (var r:int =0; r < rules.length; r++) {
+              var rule:Rule = rules[r];
+              if (rule.variable == production.charAt(i)) {
+                produceString(rule.expression, order - 1);
               }
             }
           }
