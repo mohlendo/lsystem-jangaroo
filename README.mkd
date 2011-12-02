@@ -1,0 +1,7 @@
+Lsystem with Jangaroo
+=========
+Lsystem is a ActionScript 3 Lindenmayer-system runtime, that I have written when Flex and Flash were the next big thing. (https://github.com/mohlendo/lsystem) Now that they are (almost) dead, here is a new version with [Jangaroo](http://www.jangaroo.net).
+Jangaroo is a cool AS3-to-JavaScript compiler.
+
+
+Copyright (c) 2011, Manuel Ohlendorf
