@@ -17,44 +17,53 @@ public class Scanner {
     }
     skipWhites();
     if (isEOF()) {
-      return new Token("eof", null);
+      return new Token(Token.EOF, null);
     }
-    var c:String = _source.charAt(_pos++);
-    var buf:String = "";
-    var code:int = c.charCodeAt(0);
-    if (isAlpha(code) || (c == '_')) {
-      /*while (isAlpha(code) || (c == '_'))
-       {
-       buf += c;
-       if (isEOF())
-       {
-       ++_pos;
-       break;
-       }
-       c = _source.charAt(_pos++);
-       code = c.charCodeAt(0);
-       }
-       --_pos;*/
-      buf += c;
-      return new Token("name", buf);
+    var sym:String = _source.charAt(_pos++);
+    var buffer:String = "";
+
+    if (isVariable(sym)) {
+      buffer += sym;
+      return new Token(Token.NAME, buffer);
     }
-    else if (c == ";") {
-      return new Token("eol", null);
+    else if (sym == ";") {
+      return new Token(Token.EOL, null);
     }
-    else if (c == "-") {
-      buf = c;
+    else if (sym == "-") {
+      buffer = sym;
+      var eq:Boolean = false;
       while (!isEOF()) {
-        c = _source.charAt(_pos);
-        if (c != '>') {
+        sym = _source.charAt(_pos);
+        if (sym != '>') {
           break;
+        } else {
+          eq = true;
         }
-        buf += c;
+        buffer += sym;
         _pos++;
       }
-      return new Token("operator", buf);
+      if (eq) {
+        return new Token(Token.EQUALS, buffer);
+      } else {
+        return new Token(Token.OPERATOR, buffer);
+      }
+    } else if (isNum(sym)) {
+      buffer = sym;
+      while (!isEOF()) {
+        sym = _source.charAt(_pos);
+        if (isNum(sym) || sym == ".") {
+          buffer += sym;
+          _pos++;
+        } else {
+          break;
+        }
+      }
+      return new Token(Token.NUMBER, buffer);
     }
-    else {
-      return new Token("operator", c);
+    else if (isCommand(sym)) {
+      return new Token(Token.OPERATOR, sym);
+    } else {
+      throw new Error("Unknown character: " + sym);
     }
   }
 
@@ -62,8 +71,21 @@ public class Scanner {
     _tokens.push(token);
   }
 
-  private function isAlpha(c:int):Boolean {
-    return ((c >= 97) && (c <= 122)) || ((c >= 65) && (c <= 90));
+  private function isVariable(sym:String):Boolean {
+    var c:int = sym.charCodeAt(0);
+    return (c >= 97) && (c <= 122);
+  }
+
+  private function isCommand(sym:String):Boolean {
+    var c:int = sym.charCodeAt(0);
+    return (c >= 65) && (c <= 90) || ['[', ']', '|', '+', '-', '@', '%', '>', '<'].some(function(chr:String):Boolean {
+      return sym === chr;
+    });
+  }
+
+  private function isNum(sym:String):Boolean {
+    var charCode:int = sym.charCodeAt(0);
+    return (charCode >= 48 && charCode <= 57);
   }
 
   private function isEOF():Boolean {
@@ -72,8 +94,8 @@ public class Scanner {
 
   private function skipWhites():void {
     while (!isEOF()) {
-      var c:String = _source.charAt(_pos++);
-      if ((c != " ") && (c != "\t") && (c != "\n")) {
+      var charCode:int = _source.charAt(_pos++).charCodeAt(0);
+      if (charCode >= 33 && charCode <= 126) {
         --_pos;
         break;
       }

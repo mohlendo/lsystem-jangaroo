@@ -16,13 +16,13 @@ public class Turtle {
   // color is the color of the line drawn by turtle
   // lineThickness is the thickness of said line
   // sprite is the Sprite we're drawing on
-  public function Turtle(_curPos:Point, _curDir:Number, _color:uint, _lt:uint, _graphics:Graphics) {
-    curPos = new Point(_curPos.x, _curPos.y);
-    curPosOriginal = new Point(_curPos.x, _curPos.y);
-    curDirRad = _curDir;
-    color = _color;
-    lineThickness = _lt;
-    graphics = _graphics;
+  public function Turtle(currentPosition:Point, currentDirection:Number, color:uint, lineThickness:uint, graphics:Graphics) {
+    curPos = new Point(currentPosition.x, currentPosition.y);
+    curPosOriginal = new Point(currentPosition.x, currentPosition.y);
+    curDirRad = currentDirection;
+    this.color = color;
+    this.lineThickness = lineThickness;
+    this.graphics = graphics;
     stateStack = new Array();
     resetTurtle();
   }

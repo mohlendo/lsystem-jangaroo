@@ -16,7 +16,7 @@ public class Main extends Sprite {
     {
       name:  "Lsystema vulgaris",
       productions: "F -> F[+F]F[-F]F",
-      start: "F",
+      axiom: "F",
       order: 5,
       angle: 27.7,
 
@@ -26,8 +26,9 @@ public class Main extends Sprite {
     },
     {
       name:  "Tree 1",
-      productions: "X -> F-[[X]+X]+F[+FX]-X\n F -> FF",
-      start: "X",
+      productions: "x -> F-[[x]+x]+F[+Fx]-x;" +
+              "F -> FF",
+      axiom: "x",
       order: 6,
       angle: 27.0,
 
@@ -39,10 +40,10 @@ public class Main extends Sprite {
       name:  "Tree 2",
       productions: "T -> R-[T]++[++L]R[--L]+[T]--T;" +
               "R -> F[++L][--L]F;" +
-              "L -> [+FX-FX-FX+|+FX-FX-FX|+FXFX];" +
-              "FX -> FX;" +
+              "L -> [+Fx-Fx-Fx+|+Fx-Fx-Fx|+FxFx];" +
+              "Fx -> Fx;" +
               "F -> FF",
-      start: "T",
+      axiom: "T",
       order: 6,
       angle: 37.0,
 
@@ -54,8 +55,8 @@ public class Main extends Sprite {
       name:  "Tree 3",
       productions: "F -> FF-[-F+F+F]+[+F-F-F];" +
               "F -> FF-[-F+F][FF]+[+F-F];" +
-              "X -> YYYYF",
-      start: "X",
+              "x -> yyyyF",
+      axiom: "x",
       order: 5,
       angle: 22.0,
 
@@ -66,7 +67,7 @@ public class Main extends Sprite {
     {
       name:  "Koch curve",
       productions: "F -> F-F++F-F",
-      start: "F",
+      axiom: "F",
       order: 4,
       angle: 60.0,
 
@@ -77,7 +78,7 @@ public class Main extends Sprite {
     {
       name:  "Quad Koch curve",
       productions: "F -> F+F-F-FF+F+F-F",
-      start: "F+F+F+F",
+      axiom: "F+F+F+F",
       order: 3,
       angle: 90.0,
 
@@ -88,9 +89,9 @@ public class Main extends Sprite {
     {
       name:  "Hilbert curve",
       productions: "F -> F;" +
-              "X -> -YF+XFX+FY-;" +
-              "Y -> +XF-YFY-FX+;",
-      start: "X",
+              "x -> -yF+xFx+Fy-;" +
+              "y -> +xF-yFy-Fx+;",
+      axiom: "x",
       order: 6,
       angle: 90.0,
 
@@ -101,9 +102,9 @@ public class Main extends Sprite {
     {
       name:  "Sierpinski Arrowhead",
       productions: "F -> F;" +
-              "X -> YF+XF+Y;" +
-              "Y -> XF-YF-X",
-      start: "YF",
+              "x -> yF+xF+y;" +
+              "y -> xF-yF-x",
+      axiom: "yF",
       order: 6,
       angle: 60.0,
 
@@ -114,9 +115,9 @@ public class Main extends Sprite {
     {
       name:  "Dragon curve",
       productions: "F -> F;" +
-              "X -> X+YF+;" +
-              "Y -> -FX-Y",
-      start: "X",
+              "x -> x+yF+;" +
+              "y -> -Fx-y",
+      axiom: "x",
       order: 10,
       angle: 90.0,
 
@@ -127,7 +128,7 @@ public class Main extends Sprite {
     {
       name:  "Lévy C curve",
       productions: "F -> +F--F+",
-      start: "F",
+      axiom: "F",
       order: 12,
       angle: 45.0,
 
@@ -137,12 +138,12 @@ public class Main extends Sprite {
     },
     {
       name:  "Penrose Tiling P3",
-      productions: "W -> YF++ZF----XF[-YF----WF]++;" +
-              "X -> +YF--ZF[---WF--XF]+;" +
-              "Y -> -WF++XF[+++YF++ZF]-;" +
-              "Z -> --YF++++WF[+ZF++++XF]--XF;" +
+      productions: "w -> yF++zF----xF[-yF----wF]++;" +
+              "x -> +yF--zF[---wF--xF]+;" +
+              "y -> -wF++xF[+++yF++zF]-;" +
+              "z -> --yF++++wF[+zF++++xF]--xF;" +
               "F -> F",
-      start: "[X]++[X]++[X]++[X]++[X]",
+      axiom: "[x]++[x]++[x]++[x]++[x]",
       order: 6,
       angle: 36.0,
 
@@ -152,8 +153,8 @@ public class Main extends Sprite {
     },
     {
       name: "Plant-like structure",
-      productions: "X -> F[+X]F[-X]+X;F -> FF",
-      start: "X" ,
+      productions: "x -> F[+x]F[-x]+x;F -> FF",
+      axiom: "x" ,
       order: 6,
       angle: 18.0,
       startAngle:-90.0,
@@ -162,11 +163,11 @@ public class Main extends Sprite {
     },
     {
       name: "Lace",
-      productions: "W -> +++X--F--ZFX+;" +
-              "X -> ---W++F++YFW-;" +
-              "Y -> +ZFX--F--Z+++;" +
-              "Z -> -YFW++F++Y---",
-      start: "W" ,
+      productions: "w -> +++x--F--zFx+;" +
+              "x -> ---w++F++yFw-;" +
+              "y -> +zFx--F--z+++;" +
+              "z -> -yFw++F++y---",
+      axiom: "w" ,
       order: 8,
       angle: 30.0,
       startAngle:-90.0,
@@ -174,10 +175,10 @@ public class Main extends Sprite {
       lineThickness: 1
     },
     {
-      name: "Weed",
-      productions: "F -> FF-[XY]+[XY];X -> +FY;" +
-              "Y -> -FX",
-      start: "F" ,
+      name: "weed",
+      productions: "F -> FF-[xy]+[xy];x -> +Fy;" +
+              "y -> -Fx",
+      axiom: "F" ,
       order: 6,
       angle: 22.5,
       startAngle:-90.0,
@@ -209,7 +210,7 @@ public class Main extends Sprite {
               "w -> FFFF[+s]x;" +
               "x -> FFFF[+s];" +
               "y -> Fy",
-      start: "aF" ,
+      axiom: "aF" ,
       order: 40,
       angle: 12.0,
       startAngle:-90.0,
@@ -242,16 +243,23 @@ public class Main extends Sprite {
       throw new Error("no config provided!");
     }
     var rulesParser:RulesParser = new RulesParser(new Scanner(lsystemConfig.productions));
-    var rules:Array = rulesParser.parse();
-    for each (var r:Rule in rules) {
-      trace(r.variable + " " + r.expression);
+    trace(lsystemConfig.productions);
+    var rules:Array = rulesParser.rules();
+    for (var i:int = 0;i<rules.length;i++) {
+      trace(rules[i]);
     }
+    var axiomParser:RulesParser = new RulesParser(new Scanner(lsystemConfig.axiom));
+    var axioms:Array = axiomParser.axioms();
+    for (var j:int = 0;j<axioms.length;j++) {
+      trace(axioms[j]);
+    }
+
     var name:TextField = new TextField();
     name.text = lsystemConfig.name;
     addChild(name);
-    var lSystem:LSystem = new LSystem(lsystemConfig.start, rules, lsystemConfig.angle, lsystemConfig.order, lsystemConfig.lineLength);
+    var lSystem:LSystem = new LSystem(axioms, rules, lsystemConfig.angle, lsystemConfig.order, lsystemConfig.lineLength);
     addChild(lSystem);
-    lSystem.draw(320, 480, lsystemConfig.startAngle, lsystemConfig.lineThickness, -1);
+    lSystem.render(320, 480, lsystemConfig.startAngle, lsystemConfig.lineThickness, -1);
 
   }
 }

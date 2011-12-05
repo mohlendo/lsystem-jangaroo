@@ -1,44 +1,40 @@
 package lsystem {
 import flash.display.Shape;
-import flash.display.Sprite;
 import flash.events.Event;
 import flash.geom.Point;
 
+import lsystem.parser.Command;
 import lsystem.parser.Rule;
 import lsystem.rendering.Turtle;
 
 public class LSystem extends Shape {
   private var turtle:Turtle;
-  private var _start:String;
+  private var _axiom:Array;
   private var _rules:Array;
 
   private var _angle:Number;
   private var _order:Number;
-  private var _fProductions:Array;
   private var _distance:Number;
 
-  private var finalPath:Array = [];
+  private var _commands:Array = [];
+  private var _fProductions:Array = [];
 
-  public function LSystem(start:String, rules:Array, angle:Number, order:Number, distance:Number) {
-    _start = start;
+  public function LSystem(axiom:Array, rules:Array, angle:Number, order:Number, distance:Number) {
+    _axiom = axiom;
     _rules = rules;
     _angle = angle;
     _order = order;
     _distance = distance;
-    _fProductions = new Array();
-
     for each (var r:Rule in rules) {
-      if (r.variable == "F") {
-        _fProductions.push(r.expression);
+      if (r.variable.value == "F") {
+        _fProductions.push(r.commands);
       }
     }
-
-    produceString(_start, _order);
-    finalPath.position = 0;
+    grow(axiom, order);
   }
 
-  public function get start():String {
-    return _start;
+  public function get axiom():Array {
+    return _axiom;
   }
 
   public function get rules():Array {
@@ -49,7 +45,7 @@ public class LSystem extends Shape {
     return _angle;
   }
 
-  public function draw(x:Number, y:Number, startAngle:Number, lineThickness:Number, iterationSteps:Number = -1):void {
+  public function render(x:Number, y:Number, startAngle:Number, lineThickness:Number, iterationSteps:Number = -1):void {
     turtle = new Turtle(new Point(x, y), degToRad(startAngle), 0x659D32, lineThickness, graphics);
 
     addEventListener(Event.ENTER_FRAME, handleFrameEvent);
@@ -64,26 +60,26 @@ public class LSystem extends Shape {
   }
 
   private function iteratePath():Boolean {
-    for (var i:uint = 0; i < finalPath.length; i++) {
-      var step:int = finalPath[i];
+    for (var i:uint = 0; i < _commands.length; i++) {
+      var code:int = _commands[i];
 
-      switch (step) {
-        case 1:
-          turtle.turn(degToRad(angle));
-          break;
-        case 2:
-          turtle.turn(-degToRad(angle));
-          break;
-        case 3:
-          turtle.turn(degToRad(180.0));
-          break;
-        case 4:
+      switch (code) {
+        case 0://"Forward":
           turtle.forward(_distance, true);
           break;
-        case 5:
+        case 1://"TurnRight":
+          turtle.turn(degToRad(angle));
+          break;
+        case 2://"TurnLeft":
+          turtle.turn(-degToRad(angle));
+          break;
+        case 3://"TurnRound":
+          turtle.turn(degToRad(180.0));
+          break;
+        case 4://"Save":
           turtle.saveTurtle();
           break;
-        case 6:
+        case 5://"Restore":
           turtle.restoreTurtle();
           break;
 
@@ -92,45 +88,45 @@ public class LSystem extends Shape {
     return false;
   }
 
-  private function produceString(production:String, order:uint):void {
-    for (var i:uint = 0; i < production.length; i++) {
-      switch (production.charAt(i)) {
-        case '+':
-          finalPath.push(1);
-          break;
-        case '-':
-          finalPath.push(2);
-          break;
-        case '|':
-          finalPath.push(3);
-          break;
-        case 'F':
+  private function grow(commands:Array, order:uint):void {
+    for (var i:uint = 0; i < commands.length; i++) {
+      var cmd:Command = commands[i];
+      switch (cmd.command) {
+        case "Var":
           if (order > 0) {
-            var randomNo:uint = uint(Math.random() * (_fProductions.length));
-            var fStr:String = _fProductions[randomNo];
-            if (fStr) {
-              produceString(fStr, order - 1);
-            }
-          }
-          else {
-            finalPath.push(4);
-          }
-          break;
-        case '[':
-          finalPath.push(5);
-          break;
-        case ']':
-          finalPath.push(6);
-          break;
-        default:
-          if (order > 0) {
-            for (var r:int =0; r < rules.length; r++) {
+            for (var r:int = 0; r < rules.length; r++) {
               var rule:Rule = rules[r];
-              if (rule.variable == production.charAt(i)) {
-                produceString(rule.expression, order - 1);
+              if (rule.variable.value == cmd.value) {
+                grow(rule.commands, order - 1);
               }
             }
           }
+          break;
+        case "Forward":
+          if (order > 0) {
+            var randomNo:uint = uint(Math.random() * (_fProductions.length));
+            var fCommands:Array = _fProductions[randomNo];
+            if (fCommands) {
+              grow(fCommands, order - 1);
+            }
+          } else {
+            _commands.push(0);
+          }
+          break;
+        case "TurnRight":
+          _commands.push(1);
+          break;
+        case "TurnLeft":
+          _commands.push(2);
+          break;
+        case "TurnRound":
+          _commands.push(3);
+          break;
+        case "Save":
+          _commands.push(4);
+          break;
+        case "Restore":
+          _commands.push(5);
           break;
       }
     }

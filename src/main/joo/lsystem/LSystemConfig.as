@@ -4,7 +4,7 @@ public class LSystemConfig {
 
   public native function get productions():String;
   public native function get name():String;
-  public native function get start():String;
+  public native function get axiom():String;
   public native function get order():Number;
   public native function get angle():Number;
 

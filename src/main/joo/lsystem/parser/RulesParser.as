@@ -1,72 +1,103 @@
-package lsystem.parser
-{
+package lsystem.parser {
 
-  public class RulesParser
-  {
-    private var _token:Token;
-    private var _scanner:Scanner;
+public class RulesParser {
+  private var currentToken:Token;
+  private var _rulesScanner:Scanner;
 
-    public function RulesParser(scanner:Scanner)
-    {
-      _scanner = scanner;
+  public function RulesParser(scanner:Scanner) {
+    _rulesScanner = scanner;
+  }
+
+  public function rules():Array {
+    var rules:Array = new Array();
+    currentToken = _rulesScanner.nextToken();
+    while (currentToken.type != Token.EOF) {
+      rules.push(parseRule());
+      currentToken = _rulesScanner.nextToken();
     }
 
-    public function parse():Array
-    {
-      var rules:Array = new Array();
-      _token = _scanner.nextToken();
-      while (_token.type != "eof")
-      {
-        rules.push(parseRule());
-        _token = _scanner.nextToken();
-      }
-
-      if (_token.type == "eof")
-      {
-        return rules;
-      }
-      else
-      {
-        throw new Error("Unexpected token");
-      }
+    if (currentToken.type == Token.EOF) {
+      return rules;
     }
-
-
-    private function parseRule():Rule
-    {
-      var left:String;
-      var right:String;
-      left = parseVariable();
-      right = parseExpression();
-      return new Rule(left, right);
-    }
-
-    private function parseVariable():String
-    {
-      var result:String = "";
-      while (_token.type == "name")
-      {
-        result += _token.value;
-        _token = _scanner.nextToken();
-      }
-      if (_token.type == "operator" && _token.value == "->")
-      {
-        _token = _scanner.nextToken();
-      }
-      return result;
-    }
-
-    private function parseExpression():String
-    {
-      var result:String = "";
-      while (_token.type != "eol" && _token.type != "eof")
-      {
-        result += _token.value;
-        _token = _scanner.nextToken();
-      }
-      return result;
+    else {
+      throw new Error("Unexpected token");
     }
   }
+
+  public function axioms():Array {
+    var axioms:Array = new Array();
+    currentToken = _rulesScanner.nextToken();
+    return parseCommands(true);
+  }
+
+  private function parseRule():Rule {
+    var variable:Command;
+    var commands:Array;
+    variable = parseVariable();
+    commands = parseCommands();
+    return new Rule(variable, commands);
+  }
+
+  private function parseVariable():Command {
+    var result:String = "";
+    while (currentToken.type == Token.NAME || currentToken.value == "F") {
+      result += currentToken.value;
+      currentToken = _rulesScanner.nextToken();
+    }
+    if (currentToken.type == Token.EQUALS) {
+      currentToken = _rulesScanner.nextToken();
+    }
+    return new Command("Var", result);
+  }
+
+  private function parseCommands(fIsVar:Boolean = false):Array {
+    var result:Array = [];
+    while (currentToken.type != Token.EOL && currentToken.type != Token.EOF) {
+      result.push(parseCommand(result, fIsVar));
+      currentToken = _rulesScanner.nextToken();
+    }
+    return result;
+  }
+
+  private function parseCommand2(variableToken:Token, cmdToken:Token, fIsVar:Boolean):Command {
+    switch (currentToken.value) {
+      case 'F':
+        if (fIsVar) {
+          return new Command("Var", currentToken.value)
+        } else {
+          return new Command("Forward");
+        }
+      case 'J':
+        return new Command("Jump");
+      case '+':
+        return new Command("TurnRight");
+      case '-':
+        return new Command("TurnLeft");
+      case '|':
+        return new Command("TurnRound");
+      case '[':
+        return new Command("Save");
+      case ']':
+        return new Command("Restore");
+      case '@':
+        return new Command("ScaleLength", variableToken.value);
+      default:
+        return new Command("Var", currentToken.value);
+    }
+  }
+
+  private function parseCommand(result:Array, fIsVar:Boolean):Command {
+    var cmd:Command;
+    if (currentToken.type == Token.OPERATOR || currentToken.type == Token.NAME) {
+      cmd = parseCommand2(null, currentToken, fIsVar);
+    } else if (currentToken.type == Token.NUMBER) {
+      var varTk:Token = currentToken;
+      currentToken = _rulesScanner.nextToken();
+      cmd = parseCommand2(varTk, currentToken, fIsVar);
+    }
+    return cmd;
+  }
+}
 }
 
 
