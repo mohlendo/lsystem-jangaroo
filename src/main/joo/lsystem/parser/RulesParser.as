@@ -53,17 +53,17 @@ public class RulesParser {
   private function parseCommands(fIsVar:Boolean = false):Array {
     var result:Array = [];
     while (currentToken.type != Token.EOL && currentToken.type != Token.EOF) {
-      result.push(parseCommand(result, fIsVar));
+      result.push(parseCommand(fIsVar));
       currentToken = _rulesScanner.nextToken();
     }
     return result;
   }
 
-  private function parseCommand2(variableToken:Token, cmdToken:Token, fIsVar:Boolean):Command {
-    switch (currentToken.value) {
+  private function parseCommand2(cmdToken:Token, fIsVar:Boolean):Command {
+    switch (cmdToken.value) {
       case 'F':
         if (fIsVar) {
-          return new Command("Var", currentToken.value)
+          return new Command("Var", cmdToken.value)
         } else {
           return new Command("Forward");
         }
@@ -80,20 +80,20 @@ public class RulesParser {
       case ']':
         return new Command("Restore");
       case '@':
-        return new Command("ScaleLength", variableToken.value);
+        var numberToken:Token = _rulesScanner.nextToken();
+        if (numberToken.type !== Token.NUMBER) {
+          throw new Error("Number expected")
+        }
+        return new Command("ScaleLength", Number(numberToken.value));
       default:
-        return new Command("Var", currentToken.value);
+        return new Command("Var", cmdToken.value);
     }
   }
 
-  private function parseCommand(result:Array, fIsVar:Boolean):Command {
+  private function parseCommand(fIsVar:Boolean):Command {
     var cmd:Command;
     if (currentToken.type == Token.OPERATOR || currentToken.type == Token.NAME) {
-      cmd = parseCommand2(null, currentToken, fIsVar);
-    } else if (currentToken.type == Token.NUMBER) {
-      var varTk:Token = currentToken;
-      currentToken = _rulesScanner.nextToken();
-      cmd = parseCommand2(varTk, currentToken, fIsVar);
+      cmd = parseCommand2(currentToken, fIsVar);
     }
     return cmd;
   }

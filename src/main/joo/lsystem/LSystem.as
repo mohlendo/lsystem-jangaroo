@@ -82,7 +82,9 @@ public class LSystem extends Shape {
         case 5://"Restore":
           turtle.restoreTurtle();
           break;
-
+        case 6://ScaleLength
+          _distance = _distance * _commands[i++];
+          break;
       }
     }
     return false;
@@ -127,6 +129,10 @@ public class LSystem extends Shape {
           break;
         case "Restore":
           _commands.push(5);
+          break;
+        case "ScaleLength":
+          _commands.push(6);
+          _commands.push(Number(cmd.value));
           break;
       }
     }

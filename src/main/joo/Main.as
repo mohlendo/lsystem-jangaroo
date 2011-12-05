@@ -216,6 +216,16 @@ public class Main extends Sprite {
       startAngle:-90.0,
       lineLength: 7.0,
       lineThickness: 1
+    },
+    {
+      name: "Big H",
+      productions: "h -> @0.65 F [+h] [-h];",
+      axiom: "[h]" ,
+      order: 3,
+      angle: 80.0,
+      startAngle:-90.0,
+      lineLength: 1.0,
+      lineThickness: 1
     }
   ];
 
