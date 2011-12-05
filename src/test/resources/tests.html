@@ -1,0 +1,22 @@
+<html>
+<head>
+  <title>com.coremedia.ui-toolkit:client-core-impl</title>
+  <script type="text/javascript">
+    // fix location href if opened from src (e.g. when using IDEA "Open in Browser") :
+    const href = window.location.href;
+    if(href.indexOf("file") === 0) {
+      var startIndex = href.indexOf("src/test");
+      if(startIndex > 0){
+        window.location.href = href.replace('src/test/resources','target/jangaroo-output-test');
+      }
+    }
+  </script>
+  <script type="text/javascript" src="joo/jangaroo-application.js"></script>
+
+  <script type="text/javascript">
+    joo.classLoader.run("net.jangaroo.joounit.runner.BrowserRunner", "lsystem.TestSuite");
+  </script>
+</head>
+<body>
+</body>
+</html>

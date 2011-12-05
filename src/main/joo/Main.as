@@ -37,10 +37,10 @@ public class Main extends Sprite {
     },
     {
       name:  "Tree 2",
-      productions: "T -> R-[T]++[++L]R[--L]+[T]--T\n" +
-              "R -> F[++L][--L]F\n" +
-              "L -> [+FX-FX-FX+|+FX-FX-FX|+FXFX]\n" +
-              "FX -> FX\n" +
+      productions: "T -> R-[T]++[++L]R[--L]+[T]--T;" +
+              "R -> F[++L][--L]F;" +
+              "L -> [+FX-FX-FX+|+FX-FX-FX|+FXFX];" +
+              "FX -> FX;" +
               "F -> FF",
       start: "T",
       order: 6,
@@ -52,8 +52,8 @@ public class Main extends Sprite {
     },
     {
       name:  "Tree 3",
-      productions: "F -> FF-[-F+F+F]+[+F-F-F]\n" +
-              "F -> FF-[-F+F][FF]+[+F-F]\n" +
+      productions: "F -> FF-[-F+F+F]+[+F-F-F];" +
+              "F -> FF-[-F+F][FF]+[+F-F];" +
               "X -> YYYYF",
       start: "X",
       order: 5,
@@ -87,9 +87,9 @@ public class Main extends Sprite {
     },
     {
       name:  "Hilbert curve",
-      productions: "F -> F\n" +
-              "X -> -YF+XFX+FY-\n" +
-              "Y -> +XF-YFY-FX+\n",
+      productions: "F -> F;" +
+              "X -> -YF+XFX+FY-;" +
+              "Y -> +XF-YFY-FX+;",
       start: "X",
       order: 6,
       angle: 90.0,
@@ -100,8 +100,8 @@ public class Main extends Sprite {
     },
     {
       name:  "Sierpinski Arrowhead",
-      productions: "F -> F\n" +
-              "X -> YF+XF+Y\n" +
+      productions: "F -> F;" +
+              "X -> YF+XF+Y;" +
               "Y -> XF-YF-X",
       start: "YF",
       order: 6,
@@ -113,8 +113,8 @@ public class Main extends Sprite {
     },
     {
       name:  "Dragon curve",
-      productions: "F -> F\n" +
-              "X -> X+YF+\n" +
+      productions: "F -> F;" +
+              "X -> X+YF+;" +
               "Y -> -FX-Y",
       start: "X",
       order: 10,
@@ -137,10 +137,10 @@ public class Main extends Sprite {
     },
     {
       name:  "Penrose Tiling P3",
-      productions: "W -> YF++ZF----XF[-YF----WF]++\n" +
-              "X -> +YF--ZF[---WF--XF]+\n" +
-              "Y -> -WF++XF[+++YF++ZF]-\n" +
-              "Z -> --YF++++WF[+ZF++++XF]--XF\n" +
+      productions: "W -> YF++ZF----XF[-YF----WF]++;" +
+              "X -> +YF--ZF[---WF--XF]+;" +
+              "Y -> -WF++XF[+++YF++ZF]-;" +
+              "Z -> --YF++++WF[+ZF++++XF]--XF;" +
               "F -> F",
       start: "[X]++[X]++[X]++[X]++[X]",
       order: 6,
@@ -148,6 +148,72 @@ public class Main extends Sprite {
 
       startAngle:-90.0,
       lineLength: 6.0,
+      lineThickness: 1
+    },
+    {
+      name: "Plant-like structure",
+      productions: "X -> F[+X]F[-X]+X;F -> FF",
+      start: "X" ,
+      order: 6,
+      angle: 18.0,
+      startAngle:-90.0,
+      lineLength: 3.0,
+      lineThickness: 1
+    },
+    {
+      name: "Lace",
+      productions: "W -> +++X--F--ZFX+;" +
+              "X -> ---W++F++YFW-;" +
+              "Y -> +ZFX--F--Z+++;" +
+              "Z -> -YFW++F++Y---",
+      start: "W" ,
+      order: 8,
+      angle: 30.0,
+      startAngle:-90.0,
+      lineLength: 6.0,
+      lineThickness: 1
+    },
+    {
+      name: "Weed",
+      productions: "F -> FF-[XY]+[XY];X -> +FY;" +
+              "Y -> -FX",
+      start: "F" ,
+      order: 6,
+      angle: 22.5,
+      startAngle:-90.0,
+      lineLength: 3.0,
+      lineThickness: 1
+    }   ,
+    {
+      name: "Algea",
+      productions: "a -> FFFFFy[++++n][----t]Fb;" +
+              "b -> +FFFFFy[++++n][----t]Fc;" +
+              "c -> FFFFFy[++++n][----t]Fd;" +
+              "d -> -FFFFFy[++++n][----t]Fe;" +
+              "e -> FFFFFy[++++n][----t]Fg;" +
+              "g -> FFFFFy[+++Fa]Fh;" +
+              "h -> FFFFFy[++++n][----t]Fi;" +
+              "i -> +FFFFFy[++++n][----t]Fj;" +
+              "j -> FFFFFy[++++n][----t]Fk;" +
+              "k -> -FFFFFy[++++n][----t]Fl;" +
+              "l -> FFFFFy[++++n][----t]Fm;" +
+              "m -> FFFFFy[---Fa]Fa;" +
+              "n -> oFFFF;o -> FFFFp;" +
+              "p -> FFFF[-s]q;" +
+              "q -> FFFF[-s]r;" +
+              "r -> FFFF[-s];" +
+              "s -> FFFF;" +
+              "t -> uFFFF;" +
+              "u -> FFFFv;" +
+              "v -> FFFF[+s]w;" +
+              "w -> FFFF[+s]x;" +
+              "x -> FFFF[+s];" +
+              "y -> Fy",
+      start: "aF" ,
+      order: 40,
+      angle: 12.0,
+      startAngle:-90.0,
+      lineLength: 7.0,
       lineThickness: 1
     }
   ];
@@ -181,7 +247,7 @@ public class Main extends Sprite {
       trace(r.variable + " " + r.expression);
     }
     var name:TextField = new TextField();
-    name.text=lsystemConfig.name;
+    name.text = lsystemConfig.name;
     addChild(name);
     var lSystem:LSystem = new LSystem(lsystemConfig.start, rules, lsystemConfig.angle, lsystemConfig.order, lsystemConfig.lineLength);
     addChild(lSystem);

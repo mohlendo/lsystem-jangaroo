@@ -9,6 +9,7 @@
 
   <build>
     <sourceDirectory>src/main/joo</sourceDirectory>
+    <testSourceDirectory>src/test/joo</testSourceDirectory>
     <outputDirectory>target/jangaroo-output</outputDirectory>
 
     <resources>
@@ -22,10 +23,17 @@
         <artifactId>jangaroo-maven-plugin</artifactId>
         <version>0.9.6</version>
         <extensions>true</extensions>
+         <configuration>
+          <phantomTestSuite>lsystem.TestSuite</phantomTestSuite>
+          <phantomTestRunner>joo/phantomjs-joounit-runner.js</phantomTestRunner>
+          <phantomArgs>timeout=10000</phantomArgs>
+          <phantomArgs>usePage</phantomArgs>
+        </configuration>
          <executions>
           <execution>
             <goals>
               <goal>compile</goal>
+              <goal>testCompile</goal>
               <goal>war-package</goal>
             </goals>
           </execution>
@@ -39,15 +47,16 @@
     <dependency>
       <groupId>net.jangaroo</groupId>
       <artifactId>jooflash</artifactId>
-      <version>0.9.6</version>
       <type>jangaroo</type>
+      <version>0.9.6</version>
     </dependency>
 
     <dependency>
       <groupId>net.jangaroo</groupId>
-      <artifactId>jooflexframework</artifactId>
-      <version>0.9.6</version>
+      <artifactId>joounit</artifactId>
       <type>jangaroo</type>
+      <version>0.9.6</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
