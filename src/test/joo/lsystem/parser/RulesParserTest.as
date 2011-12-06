@@ -35,5 +35,20 @@ public class RulesParserTest extends TestCase {
     assertEquals("Var", cmd.command);
     assertEquals("F", cmd.value);
   }
+
+  public function testCommandsInAxiom():void {
+    rulesParser = new RulesParser(new Scanner("[h]"));
+    var axioms:Array = rulesParser.axioms();
+    assertEquals(3, axioms.length);
+    var cmd:Command = axioms[0];
+    assertEquals("Save", cmd.command);
+
+    cmd = axioms[1];
+    assertEquals("Var", cmd.command);
+    assertEquals("h", cmd.value);
+
+    cmd = axioms[2];
+    assertEquals("Restore", cmd.command);
+  }
 }
 }

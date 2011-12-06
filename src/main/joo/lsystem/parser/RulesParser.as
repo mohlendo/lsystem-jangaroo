@@ -73,6 +73,8 @@ public class RulesParser {
         return new Command("TurnRight");
       case '-':
         return new Command("TurnLeft");
+      case '!':
+        return new Command("Reverse"); //reverse the meaning of + and -
       case '|':
         return new Command("TurnRound");
       case '[':

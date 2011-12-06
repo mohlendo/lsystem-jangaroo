@@ -4,9 +4,9 @@ import flash.text.TextField;
 
 import lsystem.LSystem;
 import lsystem.LSystemConfig;
-import lsystem.parser.Rule;
 import lsystem.parser.RulesParser;
 import lsystem.parser.Scanner;
+import lsystem.rendering.Renderer;
 
 [SWF( backgroundColor='0xFFFFFF', frameRate='30', width='640', height='480')]
 public class Main extends Sprite {
@@ -38,12 +38,12 @@ public class Main extends Sprite {
     },
     {
       name:  "Tree 2",
-      productions: "T -> R-[T]++[++L]R[--L]+[T]--T;" +
-              "R -> F[++L][--L]F;" +
-              "L -> [+Fx-Fx-Fx+|+Fx-Fx-Fx|+FxFx];" +
+      productions: "t -> r-[t]++[++l]r[--l]+[t]--t;" +
+              "r -> F[++l][--l]F;" +
+              "l -> [+Fx-Fx-Fx+|+Fx-Fx-Fx|+FxFx];" +
               "Fx -> Fx;" +
               "F -> FF",
-      axiom: "T",
+      axiom: "t",
       order: 6,
       angle: 37.0,
 
@@ -187,31 +187,29 @@ public class Main extends Sprite {
     }   ,
     {
       name: "Algea",
-      productions: "a -> FFFFFy[++++n][----t]Fb;" +
-              "b -> +FFFFFy[++++n][----t]Fc;" +
-              "c -> FFFFFy[++++n][----t]Fd;" +
-              "d -> -FFFFFy[++++n][----t]Fe;" +
-              "e -> FFFFFy[++++n][----t]Fg;" +
-              "g -> FFFFFy[+++Fa]Fh;" +
-              "h -> FFFFFy[++++n][----t]Fi;" +
-              "i -> +FFFFFy[++++n][----t]Fj;" +
-              "j -> FFFFFy[++++n][----t]Fk;" +
-              "k -> -FFFFFy[++++n][----t]Fl;" +
-              "l -> FFFFFy[++++n][----t]Fm;" +
-              "m -> FFFFFy[---Fa]Fa;" +
-              "n -> oFFFF;o -> FFFFp;" +
-              "p -> FFFF[-s]q;" +
-              "q -> FFFF[-s]r;" +
-              "r -> FFFF[-s];" +
-              "s -> FFFF;" +
-              "t -> uFFFF;" +
-              "u -> FFFFv;" +
-              "v -> FFFF[+s]w;" +
-              "w -> FFFF[+s]x;" +
-              "x -> FFFF[+s];" +
-              "y -> Fy",
+      productions: "a -> FFFFFv[+++h][---q]Fb;" +
+              "b -> FFFFFv[+++h][---q]Fc;" +
+              "c -> FFFFFv[+++fa]fd;" +
+              "d -> FFFFFv[+++h][---q]fe;" +
+              "e -> FFFFFv[+++h][---q]fg;" +
+              "g -> FFFFFv[---fa]fa;" +
+              "h -> iFFF;" +
+              "i -> FFFF[--m]j;" +
+              "j -> FFFF[--n]k;" +
+              "k -> FFFF[--o]l;" +
+              "l -> FFFF[--p];" +
+              "m -> FFn;" +
+              "n -> FFo;" +
+              "o -> FFp;" +
+              "p -> FF;" +
+              "q -> rFF;" +
+              "r -> FFFF[++m]s;" +
+              "s -> FFFF[++n]t;" +
+              "t -> FFFF[++o]u;" +
+              "u -> FFFF[++p];" +
+              "v -> Fv",
       axiom: "aF" ,
-      order: 40,
+      order: 7,
       angle: 12.0,
       startAngle:-90.0,
       lineLength: 7.0,
@@ -220,11 +218,31 @@ public class Main extends Sprite {
     {
       name: "Big H",
       productions: "h -> @0.65 F [+h] [-h];",
-      axiom: "[h]" ,
-      order: 3,
+      axiom: "[h]--h" ,
+      order: 15,
       angle: 80.0,
       startAngle:-90.0,
-      lineLength: 1.0,
+      lineLength: 480.0,
+      lineThickness: 1
+    },
+    {
+      name: "Big H2",
+      productions: "h -> @0.65 F [+h] [-h];",
+      axiom: "[h]" ,
+      order: 15,
+      angle: 80.0,
+      startAngle:-90.0,
+      lineLength: 480.0,
+      lineThickness: 1
+    },
+    {
+      name: "Weed 2",
+      productions: "x -> F[@0.5+++++++++x]-F[@0.4-----------!x]@0.6x",
+      axiom: "+++++++++++++x",
+      order: 7,
+      angle: 50.0,
+      startAngle:-90.0,
+      lineLength: 480.0,
       lineThickness: 1
     }
   ];
@@ -255,21 +273,22 @@ public class Main extends Sprite {
     var rulesParser:RulesParser = new RulesParser(new Scanner(lsystemConfig.productions));
     trace(lsystemConfig.productions);
     var rules:Array = rulesParser.rules();
-    for (var i:int = 0;i<rules.length;i++) {
+    for (var i:int = 0; i < rules.length; i++) {
       trace(rules[i]);
     }
     var axiomParser:RulesParser = new RulesParser(new Scanner(lsystemConfig.axiom));
     var axioms:Array = axiomParser.axioms();
-    for (var j:int = 0;j<axioms.length;j++) {
+    for (var j:int = 0; j < axioms.length; j++) {
       trace(axioms[j]);
     }
 
     var name:TextField = new TextField();
     name.text = lsystemConfig.name;
     addChild(name);
-    var lSystem:LSystem = new LSystem(axioms, rules, lsystemConfig.angle, lsystemConfig.order, lsystemConfig.lineLength);
-    addChild(lSystem);
-    lSystem.render(320, 480, lsystemConfig.startAngle, lsystemConfig.lineThickness, -1);
+    var lSystem:LSystem = new LSystem(axioms, rules, lsystemConfig.angle, lsystemConfig.order);
+    var renderer:Renderer = new Renderer(lSystem, lsystemConfig.lineLength)
+    addChild(renderer);
+    renderer.render(320, 480, lsystemConfig.startAngle, lsystemConfig.lineThickness, -1);
 
   }
 }

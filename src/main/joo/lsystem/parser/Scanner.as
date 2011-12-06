@@ -78,7 +78,7 @@ public class Scanner {
 
   private function isCommand(sym:String):Boolean {
     var c:int = sym.charCodeAt(0);
-    return (c >= 65) && (c <= 90) || ['[', ']', '|', '+', '-', '@', '%', '>', '<'].some(function(chr:String):Boolean {
+    return (c >= 65) && (c <= 90) || ['[', ']', '|', '!', '+', '-', '@', '%', '>', '<'].some(function(chr:String):Boolean {
       return sym === chr;
     });
   }
