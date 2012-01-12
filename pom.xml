@@ -21,13 +21,12 @@
       <plugin>
         <groupId>net.jangaroo</groupId>
         <artifactId>jangaroo-maven-plugin</artifactId>
-        <version>0.9.6</version>
+        <version>0.9.9</version>
         <extensions>true</extensions>
          <configuration>
           <phantomTestSuite>lsystem.TestSuite</phantomTestSuite>
           <phantomTestRunner>joo/phantomjs-joounit-runner.js</phantomTestRunner>
-          <phantomArgs>timeout=10000</phantomArgs>
-          <phantomArgs>usePage</phantomArgs>
+          <phantomArgs>{timeout:10000}</phantomArgs>
         </configuration>
          <executions>
           <execution>
@@ -48,14 +47,14 @@
       <groupId>net.jangaroo</groupId>
       <artifactId>jooflash</artifactId>
       <type>jangaroo</type>
-      <version>0.9.6</version>
+      <version>0.9.9</version>
     </dependency>
 
     <dependency>
       <groupId>net.jangaroo</groupId>
       <artifactId>joounit</artifactId>
       <type>jangaroo</type>
-      <version>0.9.6</version>
+      <version>0.9.9</version>
       <scope>test</scope>
     </dependency>
 
